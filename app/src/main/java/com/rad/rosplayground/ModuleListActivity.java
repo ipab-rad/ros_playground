@@ -15,11 +15,14 @@ import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
 import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.TopicSystemState;
+import org.ros.master.client.TopicType;
 import org.ros.node.NodeConfiguration;
 import org.ros.node.NodeMain;
 import org.ros.node.NodeMainExecutor;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static org.ros.node.NodeConfiguration.newPublic;
 
@@ -72,8 +75,14 @@ public class ModuleListActivity extends RosActivity
     public void onItemSelected(String id) {
 
         ListView drawerList = (ListView) findViewById(R.id.module_drawer);
-        String[] mTopicTitles = new String[]{"Topic " + id + "-1", "Topic " + id + "-2"};
+        List<String> mTopicTitles = new ArrayList<>();
         // Set the adapter for the list view
+        List<TopicType> topicTypes = masterStateClient.getTopicTypes();
+        if(id.equals("1")) {
+            for(TopicType topicType: topicTypes){
+                mTopicTitles.add(topicType.getName());
+            }
+        }
         drawerList.setAdapter(new ArrayAdapter<String>(this,
                 R.layout.drawer_list_item, mTopicTitles));
         drawerList.setOnItemClickListener(new DrawerItemClickListener());
@@ -124,7 +133,16 @@ public class ModuleListActivity extends RosActivity
     private void logTopicsFromMasterClient() {
         Collection<TopicSystemState> topics = masterStateClient.getSystemState().getTopics();
         for(TopicSystemState topic: topics){
-            Log.i(TAG, topic.getTopicName());
+            Log.i("topicName", topic.getTopicName());
+            Log.i("topicPublisherSet", topic.getPublishers().toString());
+            Log.i("topicSubscriberSet", topic.getSubscribers().toString());
         }
+
+        List<TopicType> topicTypes = masterStateClient.getTopicTypes();
+        for(TopicType topicType: topicTypes){
+            Log.i("topicTypeName", topicType.getName());
+            Log.i("topicTypeMessageType", topicType.getMessageType());
+        }
+
     }
 }

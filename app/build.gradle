@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+apply plugin: 'org.robolectric'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
+
+    defaultConfig {
+        applicationId "com.rad.rosplayground"
+        minSdkVersion 18
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    android {
+        lintOptions {
+            abortOnError false
+        }
+    }
+
+    packagingOptions {
+        /* https://github.com/rosjava/android_core/issues/194 */
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:22.1.1'
+    compile 'com.android.support:support-v4:22.1.1'
+
+    compile 'com.rad:rosjava_wrapper:0.1-alpha'
+//    compile 'com.rad:myo:0.1-alpha'
+//    compile 'com.rad:math:0.1'
+//    compile 'com.thalmic:myosdk:0.10.0@aar'
+    compile ('org.ros.android_core:android_15:0.2.0') {
+        exclude group: 'xml-apis'
+        exclude group: 'junit'
+    }
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    testCompile 'org.assertj:assertj-core:1.7.1'
+    testCompile('org.robolectric:robolectric:3.0-rc3') {
+        exclude group: 'commons-logging', module: 'commons-logging'
+        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
+    }
+}

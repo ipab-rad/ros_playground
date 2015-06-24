@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Ros Playground</string>
+    <string name="title_module_detail">Module Detail</string>
+</resources>

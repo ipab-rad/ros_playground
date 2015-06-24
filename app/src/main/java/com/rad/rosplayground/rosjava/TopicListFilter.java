@@ -20,4 +20,14 @@ public class TopicListFilter {
         String[] parts = topicType.getName().split("/");
         return parts[1].equals(startsWith);
     }
+
+    public static List<TopicType> topicsNotStartingWith(List<TopicType> topicList, String startsWith) {
+        List<TopicType> filteredTopicList = new ArrayList<>();
+        for(TopicType topicType: topicList){
+            if(!doesTopicStartWith(topicType, startsWith)){
+                filteredTopicList.add(topicType);
+            }
+        }
+        return filteredTopicList;
+    }
 }

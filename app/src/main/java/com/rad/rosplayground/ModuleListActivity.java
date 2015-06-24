@@ -9,22 +9,16 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.rad.rosjava_wrapper.publish.TimePublisherNode;
+import com.rad.rosplayground.rosjava.MasterStateClientFactory;
 
 import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
-import org.ros.internal.node.DefaultNode;
 import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.TopicSystemState;
-import org.ros.node.DefaultNodeFactory;
-import org.ros.node.DefaultNodeListener;
-import org.ros.node.DefaultNodeMainExecutor;
-import org.ros.node.Node;
 import org.ros.node.NodeConfiguration;
-import org.ros.node.NodeListener;
 import org.ros.node.NodeMain;
 import org.ros.node.NodeMainExecutor;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static org.ros.node.NodeConfiguration.newPublic;
@@ -35,6 +29,7 @@ public class ModuleListActivity extends RosActivity
     private String TAG = "ModuleListActivity";
     private String currentDrawer = "none";
     private TimePublisherNode publisherNode;
+    private MasterStateClient masterStateClient;
 
     public ModuleListActivity(){
         this("ModuleListActivity");
@@ -122,20 +117,11 @@ public class ModuleListActivity extends RosActivity
         nodeConfiguration.setMasterUri(getMasterUri());
         nodeMainExecutor.execute(node, nodeConfiguration);
 
-        logTopicsFromMasterClient(nodeMainExecutor);
+        masterStateClient = MasterStateClientFactory.getInstance(nodeMainExecutor, getMasterUri());
+        logTopicsFromMasterClient();
     }
 
-    private void logTopicsFromMasterClient(NodeMainExecutor nodeMainExecutor) {
-        NodeConfiguration nodeConfiguration = newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-        nodeConfiguration.setDefaultNodeName("MasterClient/masterListener");
-        Log.i(TAG, nodeConfiguration.getNodeName().toString());
-        nodeConfiguration.setMasterUri(getMasterUri());
-        ArrayList<NodeListener> listeners = new ArrayList<>();
-        DefaultNodeFactory defaultNodeFactory = new DefaultNodeFactory(nodeMainExecutor.getScheduledExecutorService());
-        Node host = defaultNodeFactory.newNode(nodeConfiguration, listeners);
-
-
-        MasterStateClient masterStateClient = new MasterStateClient(host, getMasterUri());
+    private void logTopicsFromMasterClient() {
         Collection<TopicSystemState> topics = masterStateClient.getSystemState().getTopics();
         for(TopicSystemState topic: topics){
             Log.i(TAG, topic.getTopicName());

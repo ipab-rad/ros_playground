@@ -2,37 +2,35 @@ package com.rad.rosplayground;
 
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.rad.rosjava_wrapper.publish.TimePublisherNode;
 import com.rad.rosplayground.rosjava.MasterStateClientFactory;
+import com.rad.rosplayground.rosjava.TopicListBucketer;
+import com.rad.rosplayground.rosjava.TopicListFilter;
 
-import org.ros.address.InetAddressFactory;
 import org.ros.android.RosActivity;
 import org.ros.master.client.MasterStateClient;
-import org.ros.master.client.TopicSystemState;
 import org.ros.master.client.TopicType;
-import org.ros.node.NodeConfiguration;
-import org.ros.node.NodeMain;
 import org.ros.node.NodeMainExecutor;
 
+import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-
-import static org.ros.node.NodeConfiguration.newPublic;
+import java.util.Map;
 
 public class ModuleListActivity extends RosActivity
         implements ModuleListFragment.Callbacks {
 
     private String TAG = "ModuleListActivity";
     private String currentDrawer = "none";
-    private TimePublisherNode publisherNode;
     private MasterStateClient masterStateClient;
+    FrameLayout playgroundContainer;
+    List<String> mTopicTitles;
 
     public ModuleListActivity(){
         this("ModuleListActivity");
@@ -51,6 +49,7 @@ public class ModuleListActivity extends RosActivity
         setContentView(R.layout.activity_module_list);
         lockModuleDrawerClosed();
         activateListItemsOnTouch();
+        playgroundContainer = (FrameLayout) findViewById(R.id.playground_container);
     }
 
     private void lockModuleDrawerClosed() {
@@ -75,12 +74,23 @@ public class ModuleListActivity extends RosActivity
     public void onItemSelected(String id) {
 
         ListView drawerList = (ListView) findViewById(R.id.module_drawer);
-        List<String> mTopicTitles = new ArrayList<>();
+        mTopicTitles = new ArrayList<>();
         // Set the adapter for the list view
         List<TopicType> topicTypes = masterStateClient.getTopicTypes();
         if(id.equals("1")) {
-            for(TopicType topicType: topicTypes){
-                mTopicTitles.add(topicType.getName());
+            Map<String, List<TopicType>> bucketedTopics = TopicListBucketer.bucketTopics(topicTypes);
+            for(String topicNamespace: bucketedTopics.keySet()){
+                mTopicTitles.add(topicNamespace);
+            }
+        } else if(id.equals("2")){
+            List<TopicType> turtle1Topics = TopicListFilter.topicsStartingWith(topicTypes, "turtle1");
+            for(TopicType turtle1Topic: turtle1Topics){
+                mTopicTitles.add(turtle1Topic.getName());
+            }
+        } else if(id.equals("3")){
+            List<TopicType> nonTurtle1Topics = TopicListFilter.topicsNotStartingWith(topicTypes, "turtle1");
+            for(TopicType topic: nonTurtle1Topics){
+                mTopicTitles.add(topic.getName());
             }
         }
         drawerList.setAdapter(new ArrayAdapter<String>(this,
@@ -113,36 +123,24 @@ public class ModuleListActivity extends RosActivity
     }
 
     private void selectItem(int position) {
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawers();
 
+        ModuleView moduleView = new TimePublisherModuleView(this, getMasterUri());
+        moduleView.setText(mTopicTitles.get(position));
+        //TODO: set x and y position correctly if something is already occupying that space
+        moduleView.setX(250);
+        moduleView.setY(250);
+        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(250,250); //TODO set height and width correctly according to view
+        moduleView.setLayoutParams(layoutParams);
+        moduleView.setOnTouchListener(moduleView);
+
+        // Add the text view to the parent layout
+        playgroundContainer.addView(moduleView);
     }
 
     @Override
     protected void init(NodeMainExecutor nodeMainExecutor) {
-        initNode(nodeMainExecutor, publisherNode);
-    }
-
-    public void initNode(NodeMainExecutor nodeMainExecutor, NodeMain node) {
-        NodeConfiguration nodeConfiguration = newPublic(InetAddressFactory.newNonLoopback().getHostAddress());
-        nodeConfiguration.setMasterUri(getMasterUri());
-        nodeMainExecutor.execute(node, nodeConfiguration);
-
         masterStateClient = MasterStateClientFactory.getInstance(nodeMainExecutor, getMasterUri());
-        logTopicsFromMasterClient();
-    }
-
-    private void logTopicsFromMasterClient() {
-        Collection<TopicSystemState> topics = masterStateClient.getSystemState().getTopics();
-        for(TopicSystemState topic: topics){
-            Log.i("topicName", topic.getTopicName());
-            Log.i("topicPublisherSet", topic.getPublishers().toString());
-            Log.i("topicSubscriberSet", topic.getSubscribers().toString());
-        }
-
-        List<TopicType> topicTypes = masterStateClient.getTopicTypes();
-        for(TopicType topicType: topicTypes){
-            Log.i("topicTypeName", topicType.getName());
-            Log.i("topicTypeMessageType", topicType.getMessageType());
-        }
-
     }
 }

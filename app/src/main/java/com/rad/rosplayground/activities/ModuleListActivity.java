@@ -85,19 +85,19 @@ public class ModuleListActivity extends RosActivity
         // Set the adapter for the list view
         List<TopicType> topicTypes = masterStateClient.getTopicTypes();
         Collection<TopicSystemState> topicSystemStates = masterStateClient.getSystemState().getTopics();
-        if(id.equals("1")) {
+        if(id.equals("all-topics")) {
             Map<String, List<TopicType>> bucketedTopics = TopicListBucketer.bucketTopics(topicTypes);
             for(String topicNamespace: bucketedTopics.keySet()){
                 mTopicTitles.add(topicNamespace);
             }
             drawerList.setOnItemClickListener(new PublisherDrawerItemClickListener());
-        } else if(id.equals("2")){
+        } else if(id.equals("subscribed-to-topics")){
             List<TopicType> topicsWithSubscribers = SubscribedTopicsFinder.find(topicSystemStates, topicTypes);
             for(TopicType topic: topicsWithSubscribers){
                 mTopicTitles.add(topic.getName());
             }
             drawerList.setOnItemClickListener(new SubscriberDrawerItemClickListener());
-        } else if(id.equals("3")){
+        } else if(id.equals("published-to-topics")){
             List<TopicType> topicsWithPublishers = PublishedToTopicsFinder.find(topicSystemStates, topicTypes);
             for(TopicType topic: topicsWithPublishers){
                 mTopicTitles.add(topic.getName());
@@ -152,7 +152,6 @@ public class ModuleListActivity extends RosActivity
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawers();
 
-        //TODO: make subscriber module view
         ModuleView moduleView = ModuleViewFactory.makeRelayModuleView(this, getMasterUri(), new TopicType("/turtle1/cmd_vel", Twist._TYPE), new TopicType("mock_twist_1", Twist._TYPE));
         moduleView.setText(mTopicTitles.get(position));
         // Add the text view to the parent layout

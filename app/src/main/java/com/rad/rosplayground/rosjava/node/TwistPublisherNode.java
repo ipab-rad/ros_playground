@@ -1,7 +1,7 @@
 package com.rad.rosplayground.rosjava.node;
 
 import com.rad.rosjava_wrapper.publish.PublisherNode;
-import com.rad.rosplayground.rosjava.msg.Vector3Factory;
+import com.rad.rosplayground.rosjava.msg.factories.Vector3Factory;
 
 import org.ros.concurrent.CancellableLoop;
 import org.ros.namespace.GraphName;

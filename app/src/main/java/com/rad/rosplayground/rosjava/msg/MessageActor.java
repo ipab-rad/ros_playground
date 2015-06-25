@@ -1,4 +1,4 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.rosjava.msg;
 
 import org.ros.message.MessageListener;
 

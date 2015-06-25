@@ -1,7 +1,7 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.Actor;
-import com.rad.rosplayground.MessageActor;
+import com.rad.rosplayground.rosjava.msg.Actor;
+import com.rad.rosplayground.rosjava.msg.MessageActor;
 
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;

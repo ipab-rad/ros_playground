@@ -2,8 +2,8 @@ package com.rad.rosplayground.views.module;
 
 import android.view.ViewGroup;
 
-import com.rad.rosplayground.Actor;
-import com.rad.rosplayground.PublishingData;
+import com.rad.rosplayground.rosjava.msg.Actor;
+import com.rad.rosplayground.rosjava.msg.PublishingData;
 import com.rad.rosplayground.activities.ModuleListActivity;
 
 import org.ros.master.client.TopicType;

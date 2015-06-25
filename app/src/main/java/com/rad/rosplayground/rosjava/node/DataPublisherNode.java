@@ -1,6 +1,6 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.PublishingData;
+import com.rad.rosplayground.rosjava.msg.PublishingData;
 
 import org.ros.concurrent.CancellableLoop;
 import org.ros.master.client.TopicType;

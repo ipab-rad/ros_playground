@@ -1,6 +1,6 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.MessageRelay;
+import com.rad.rosplayground.rosjava.msg.MessageRelay;
 
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;

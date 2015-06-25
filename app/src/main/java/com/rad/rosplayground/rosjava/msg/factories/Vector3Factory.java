@@ -1,4 +1,4 @@
-package com.rad.rosplayground.rosjava.msg;
+package com.rad.rosplayground.rosjava.msg.factories;
 
 
 import org.ros.message.MessageFactory;

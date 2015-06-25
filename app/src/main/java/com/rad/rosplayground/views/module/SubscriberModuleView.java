@@ -2,7 +2,7 @@ package com.rad.rosplayground.views.module;
 
 import android.content.Context;
 
-import com.rad.rosplayground.Actor;
+import com.rad.rosplayground.rosjava.msg.Actor;
 import com.rad.rosplayground.rosjava.node.SubscriberNode;
 
 import org.ros.master.client.TopicType;

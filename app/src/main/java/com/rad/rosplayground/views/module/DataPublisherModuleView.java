@@ -3,7 +3,7 @@ package com.rad.rosplayground.views.module;
 import android.content.Context;
 
 import com.rad.rosplayground.rosjava.node.DataPublisherNode;
-import com.rad.rosplayground.PublishingData;
+import com.rad.rosplayground.rosjava.msg.PublishingData;
 
 import org.ros.master.client.TopicType;
 

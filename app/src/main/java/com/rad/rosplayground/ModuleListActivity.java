@@ -125,14 +125,11 @@ public class ModuleListActivity extends RosActivity
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawers();
 
-        ModuleView moduleView = new TwistPublisherModuleView(this, getMasterUri());
+        ModuleView moduleView = ModuleViewFactory.makeTwistPublisherModuleView(this, getMasterUri());
         moduleView.setText(mTopicTitles.get(position));
-        //TODO: set x and y position correctly if something is already occupying that space
-        moduleView.setX(250);
-        moduleView.setY(250);
-        ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(250,250); //TODO set height and width correctly according to view
-        moduleView.setLayoutParams(layoutParams);
-        moduleView.setOnTouchListener(moduleView);
+        // Add the text view to the parent layout
+        playgroundContainer.addView(moduleView);
+    }
 
         // Add the text view to the parent layout
         playgroundContainer.addView(moduleView);

@@ -1,4 +1,4 @@
-package com.rad.rosplayground.rosjava;
+package com.rad.rosplayground.rosjava.topics;
 
 import org.ros.master.client.TopicSystemState;
 import org.ros.master.client.TopicType;

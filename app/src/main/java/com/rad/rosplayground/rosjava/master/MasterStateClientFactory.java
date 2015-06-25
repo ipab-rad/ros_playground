@@ -1,4 +1,4 @@
-package com.rad.rosplayground.rosjava;
+package com.rad.rosplayground.rosjava.master;
 
 import org.ros.address.InetAddressFactory;
 import org.ros.master.client.MasterStateClient;

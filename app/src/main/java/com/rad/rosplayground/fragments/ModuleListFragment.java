@@ -1,4 +1,4 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.fragments;
 
 import android.app.Activity;
 import android.app.ListFragment;

@@ -1,10 +1,13 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.views.module.mock;
 
 import android.content.Context;
 
+import com.rad.rosplayground.rosjava.node.TwistPublisherNode;
+import com.rad.rosplayground.views.module.NodeMainModuleView;
+
 import java.net.URI;
 
-public class TwistPublisherModuleView extends PublisherModuleView {
+public class TwistPublisherModuleView extends NodeMainModuleView {
 
     private TwistPublisherNode twistPublisherNode;
 

@@ -1,5 +1,7 @@
 package com.rad.rosplayground.rosjava;
 
+import com.rad.rosplayground.rosjava.topics.TopicListBucketer;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

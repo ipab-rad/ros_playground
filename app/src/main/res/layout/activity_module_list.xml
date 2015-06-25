@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/module_list"
-        android:name="com.rad.rosplayground.ModuleListFragment"
+        android:name="com.rad.rosplayground.fragments.ModuleListFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"

@@ -2,6 +2,8 @@ package com.rad.rosplayground.rosjava;
 
 import android.support.annotation.NonNull;
 
+import com.rad.rosplayground.rosjava.topics.SubscribedTopicsFinder;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

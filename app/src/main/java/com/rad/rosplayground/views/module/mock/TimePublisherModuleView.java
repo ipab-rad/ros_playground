@@ -1,12 +1,13 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.views.module.mock;
 
 import android.content.Context;
 
 import com.rad.rosjava_wrapper.publish.TimePublisherNode;
+import com.rad.rosplayground.views.module.NodeMainModuleView;
 
 import java.net.URI;
 
-public class TimePublisherModuleView extends PublisherModuleView {
+public class TimePublisherModuleView extends NodeMainModuleView {
 
     private TimePublisherNode timePublisherNode;
 

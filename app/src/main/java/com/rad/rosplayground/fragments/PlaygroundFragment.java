@@ -1,10 +1,12 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.rad.rosplayground.R;
 
 public class PlaygroundFragment extends Fragment {
 

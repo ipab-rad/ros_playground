@@ -3,23 +3,26 @@ package com.rad.rosplayground;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.rad.rosplayground.rosjava.MasterStateClientFactory;
+import com.rad.rosplayground.rosjava.MasterStateClientLogger;
+import com.rad.rosplayground.rosjava.PublishedToTopicsFinder;
+import com.rad.rosplayground.rosjava.SubscribedTopicsFinder;
 import com.rad.rosplayground.rosjava.TopicListBucketer;
-import com.rad.rosplayground.rosjava.TopicListFilter;
 
 import org.ros.android.RosActivity;
 import org.ros.master.client.MasterStateClient;
+import org.ros.master.client.TopicSystemState;
 import org.ros.master.client.TopicType;
 import org.ros.node.NodeMainExecutor;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -76,25 +79,27 @@ public class ModuleListActivity extends RosActivity
         mTopicTitles = new ArrayList<>();
         // Set the adapter for the list view
         List<TopicType> topicTypes = masterStateClient.getTopicTypes();
+        Collection<TopicSystemState> topicSystemStates = masterStateClient.getSystemState().getTopics();
         if(id.equals("1")) {
             Map<String, List<TopicType>> bucketedTopics = TopicListBucketer.bucketTopics(topicTypes);
             for(String topicNamespace: bucketedTopics.keySet()){
                 mTopicTitles.add(topicNamespace);
             }
+            drawerList.setOnItemClickListener(new PublisherDrawerItemClickListener());
         } else if(id.equals("2")){
-            List<TopicType> turtle1Topics = TopicListFilter.topicsStartingWith(topicTypes, "turtle1");
-            for(TopicType turtle1Topic: turtle1Topics){
-                mTopicTitles.add(turtle1Topic.getName());
-            }
-        } else if(id.equals("3")){
-            List<TopicType> nonTurtle1Topics = TopicListFilter.topicsNotStartingWith(topicTypes, "turtle1");
-            for(TopicType topic: nonTurtle1Topics){
+            List<TopicType> topicsWithSubscribers = SubscribedTopicsFinder.find(topicSystemStates, topicTypes);
+            for(TopicType topic: topicsWithSubscribers){
                 mTopicTitles.add(topic.getName());
             }
+            drawerList.setOnItemClickListener(new SubscriberDrawerItemClickListener());
+        } else if(id.equals("3")){
+            List<TopicType> topicsWithPublishers = PublishedToTopicsFinder.find(topicSystemStates, topicTypes);
+            for(TopicType topic: topicsWithPublishers){
+                mTopicTitles.add(topic.getName());
+            }
+            drawerList.setOnItemClickListener(new PublisherDrawerItemClickListener());
         }
-        drawerList.setAdapter(new ArrayAdapter<String>(this,
-                R.layout.drawer_list_item, mTopicTitles));
-        drawerList.setOnItemClickListener(new DrawerItemClickListener());
+        drawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_list_item, mTopicTitles));
 
         toggleDrawer(id, drawerList);
         currentDrawer = id;
@@ -114,14 +119,14 @@ public class ModuleListActivity extends RosActivity
         }
     }
 
-    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+    private class PublisherDrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
-            selectItem(position);
+            selectPublisherItem(position);
         }
     }
 
-    private void selectItem(int position) {
+    private void selectPublisherItem(int position) {
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawers();
 
@@ -131,6 +136,20 @@ public class ModuleListActivity extends RosActivity
         playgroundContainer.addView(moduleView);
     }
 
+    private class SubscriberDrawerItemClickListener implements ListView.OnItemClickListener {
+        @Override
+        public void onItemClick(AdapterView parent, View view, int position, long id) {
+            selectSubscriberItem(position);
+        }
+    }
+
+    private void selectSubscriberItem(int position) {
+        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.closeDrawers();
+
+        //TODO: make subscriber module view
+        ModuleView moduleView = ModuleViewFactory.makeTwistPublisherModuleView(this, getMasterUri());
+        moduleView.setText(mTopicTitles.get(position));
         // Add the text view to the parent layout
         playgroundContainer.addView(moduleView);
     }

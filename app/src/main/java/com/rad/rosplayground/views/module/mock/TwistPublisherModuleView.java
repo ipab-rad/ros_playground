@@ -2,7 +2,7 @@ package com.rad.rosplayground.views.module.mock;
 
 import android.content.Context;
 
-import com.rad.rosplayground.rosjava.node.TwistPublisherNode;
+import com.rad.rosplayground.rosjava.node.mock.TwistPublisherNode;
 import com.rad.rosplayground.views.module.NodeMainModuleView;
 
 import java.net.URI;

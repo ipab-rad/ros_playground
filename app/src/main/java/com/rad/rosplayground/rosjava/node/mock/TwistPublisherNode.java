@@ -1,4 +1,4 @@
-package com.rad.rosplayground.rosjava.node;
+package com.rad.rosplayground.rosjava.node.mock;
 
 import com.rad.rosjava_wrapper.publish.PublisherNode;
 import com.rad.rosplayground.rosjava.msg.factories.Vector3Factory;

@@ -1,11 +1,11 @@
-package com.rad.rosplayground;
+package com.rad.rosplayground.views.module;
 
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
-public class ModuleView extends TextView implements View.OnTouchListener{
+public abstract class ModuleView extends TextView implements View.OnTouchListener{
     private float _xDelta;
     private float _yDelta;
 

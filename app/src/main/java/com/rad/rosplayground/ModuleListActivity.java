@@ -37,10 +37,9 @@ public class ModuleListActivity extends RosActivity
     }
 
     public ModuleListActivity(String activityIdentifier) {
-        super(activityIdentifier, activityIdentifier);
+//        super(activityIdentifier, activityIdentifier);
         //Use below if we want to by pass MasterURIChooser and hardcode
-        //super(activityIdentifier, activityIdentifier, URI.create("http://localhost:11311"));
-        publisherNode = new TimePublisherNode();
+        super(activityIdentifier, activityIdentifier, URI.create("http://192.168.115.156:11311"));
     }
 
     @Override
@@ -126,7 +125,7 @@ public class ModuleListActivity extends RosActivity
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawers();
 
-        ModuleView moduleView = new TimePublisherModuleView(this, getMasterUri());
+        ModuleView moduleView = new TwistPublisherModuleView(this, getMasterUri());
         moduleView.setText(mTopicTitles.get(position));
         //TODO: set x and y position correctly if something is already occupying that space
         moduleView.setX(250);

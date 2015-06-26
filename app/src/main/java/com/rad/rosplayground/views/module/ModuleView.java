@@ -6,8 +6,8 @@ import android.view.View;
 import android.widget.TextView;
 
 public abstract class ModuleView extends TextView implements View.OnTouchListener{
-    private float _xDelta;
-    private float _yDelta;
+    float _xDelta;
+    float _yDelta;
 
     public ModuleView(Context context) {
         super(context);

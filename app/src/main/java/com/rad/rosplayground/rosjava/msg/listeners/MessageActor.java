@@ -1,4 +1,6 @@
-package com.rad.rosplayground.rosjava.msg;
+package com.rad.rosplayground.rosjava.msg.listeners;
+
+import com.rad.rosplayground.rosjava.msg.actors.Actor;
 
 import org.ros.message.MessageListener;
 

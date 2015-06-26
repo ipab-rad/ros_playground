@@ -1,7 +1,7 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.rosjava.msg.Actor;
-import com.rad.rosplayground.rosjava.msg.MessageActor;
+import com.rad.rosplayground.rosjava.msg.actors.Actor;
+import com.rad.rosplayground.rosjava.msg.listeners.MessageActor;
 
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;
@@ -15,6 +15,7 @@ public class SubscriberNode extends AbstractNodeMain{
 
     public SubscriberNode(TopicType topicToSubscribeTo, Actor actor) {
         this.topicToSubscribeTo = topicToSubscribeTo;
+        this.actor = actor;
     }
 
     @Override
@@ -25,6 +26,10 @@ public class SubscriberNode extends AbstractNodeMain{
     @Override
     public void onStart(ConnectedNode connectedNode) {
         Subscriber<Object> subscriber = connectedNode.newSubscriber(topicToSubscribeTo.getName(), topicToSubscribeTo.getMessageType());
+        addMessageActor(subscriber);
+    }
+
+    private void addMessageActor(Subscriber<Object> subscriber) {
         subscriber.addMessageListener(new MessageActor<>(actor));
     }
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="topictype_item" type="id">topictype_item</item>
+    <item name="i_transform_msg_item" type="id">i_transform_msg_item</item>
+</resources>

@@ -27,7 +27,8 @@ public class DummyContent {
         // Add 3 sample items.
         addItem(new DummyItem("all-topics", "All"));
         addItem(new DummyItem("subscribed-to-topics", "Subscribed"));
-        addItem(new DummyItem("published-to-topics", "Published"));
+        addItem(new DummyItem("mock-publishers", "Mock Publishers"));
+        addItem(new DummyItem("transformers", "Transformers"));
     }
 
     private static void addItem(DummyItem item) {

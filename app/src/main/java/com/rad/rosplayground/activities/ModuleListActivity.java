@@ -9,9 +9,9 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.rad.rosplayground.fragments.ModuleListFragment;
-import com.rad.rosplayground.views.module.mock.MockModuleViewFactory;
+import com.rad.rosplayground.views.module.factories.MockModuleViewFactory;
 import com.rad.rosplayground.views.module.ModuleView;
-import com.rad.rosplayground.views.module.ModuleViewFactory;
+import com.rad.rosplayground.views.module.factories.ModuleViewFactory;
 import com.rad.rosplayground.R;
 import com.rad.rosplayground.rosjava.master.MasterStateClientFactory;
 import com.rad.rosplayground.rosjava.topics.PublishedToTopicsFinder;
@@ -132,13 +132,14 @@ public class ModuleListActivity extends RosActivity
     }
 
     private void selectPublisherItem(int position) {
+        closeDrawer();
+        ModuleView moduleView = MockModuleViewFactory.makeTwistPublisherModuleView(this, getMasterUri(), mTopicNames.get(position));
+        playgroundContainer.addView(moduleView);
+    }
+
+    private void closeDrawer() {
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawerLayout.closeDrawers();
-
-        ModuleView moduleView = MockModuleViewFactory.makeTwistPublisherModuleView(this, getMasterUri());
-        moduleView.setText(mTopicTitles.get(position));
-        // Add the text view to the parent layout
-        playgroundContainer.addView(moduleView);
     }
 
     private class SubscriberDrawerItemClickListener implements ListView.OnItemClickListener {
@@ -149,12 +150,10 @@ public class ModuleListActivity extends RosActivity
     }
 
     private void selectSubscriberItem(int position) {
-        DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.closeDrawers();
+        closeDrawer();
+        ModuleView moduleView = ModuleViewFactory.makeSubscriberModuleView(this, getMasterUri(), mTopicTypes.get(position), new LogTwistActor(), masterStateClient);
+        playgroundContainer.addView(moduleView);
 
-        ModuleView moduleView = ModuleViewFactory.makeRelayModuleView(this, getMasterUri(), new TopicType("/turtle1/cmd_vel", Twist._TYPE), new TopicType("mock_twist_1", Twist._TYPE));
-        moduleView.setText(mTopicTitles.get(position));
-        // Add the text view to the parent layout
         playgroundContainer.addView(moduleView);
     }
 

@@ -1,5 +1,6 @@
 package com.rad.rosplayground.rosjava.topics;
 
+import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.TopicSystemState;
 import org.ros.master.client.TopicType;
 
@@ -9,6 +10,12 @@ import java.util.List;
 import java.util.Set;
 
 public class PublishedToTopicsFinder {
+    public static List<TopicType> find(MasterStateClient masterStateClient){
+        List<TopicType> topicTypes = masterStateClient.getTopicTypes();
+        Collection<TopicSystemState> topicSystemStates = masterStateClient.getSystemState().getTopics();
+        return PublishedToTopicsFinder.find(topicSystemStates, topicTypes);
+    }
+
     public static List<TopicType> find(Collection<TopicSystemState> topicSystemStates, List<TopicType> topicTypes) {
         ArrayList<TopicType> topicsWithPublishers = new ArrayList<>();
         for(TopicSystemState topicSystemState: topicSystemStates){

@@ -1,5 +1,6 @@
 package com.rad.rosplayground.rosjava.topics;
 
+import org.ros.master.client.MasterStateClient;
 import org.ros.master.client.TopicSystemState;
 import org.ros.master.client.TopicType;
 
@@ -34,5 +35,11 @@ public class SubscribedTopicsFinder {
             }
         }
         return null;
+    }
+
+    public static List<TopicType> find(MasterStateClient masterStateClient) {
+        List<TopicType> topicTypes = masterStateClient.getTopicTypes();
+        Collection<TopicSystemState> topicSystemStates = masterStateClient.getSystemState().getTopics();
+        return find(topicSystemStates, topicTypes);
     }
 }

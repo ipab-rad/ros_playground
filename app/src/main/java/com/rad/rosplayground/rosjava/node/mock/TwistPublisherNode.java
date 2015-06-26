@@ -1,6 +1,7 @@
 package com.rad.rosplayground.rosjava.node.mock;
 
 import com.rad.rosjava_wrapper.publish.PublisherNode;
+import com.rad.rosplayground.rosjava.msg.factories.TwistFactory;
 import com.rad.rosplayground.rosjava.msg.factories.Vector3Factory;
 
 import org.ros.concurrent.CancellableLoop;
@@ -16,6 +17,7 @@ import geometry_msgs.Twist;
 import geometry_msgs.Vector3;
 
 //TODO shutdown node properly so node along with its topics are removed from node list and topic list
+//TODO cleanup
 public class TwistPublisherNode extends AbstractNodeMain implements PublisherNode{
 
     private static TwistPublisherNode twistPublisherNode;
@@ -61,20 +63,16 @@ public class TwistPublisherNode extends AbstractNodeMain implements PublisherNod
 
     @Override
     public void publishMessage() {
-        int loopCount = 0;
         for(Publisher<Twist> publisher: publishers) {
-            Vector3 linearVector = Vector3Factory.makeVector3(2.0 + loopCount/2, 0, 0);
-            Vector3 angularVector = Vector3Factory.makeVector3(0, 0, 1.8 - loopCount/2);
+            Vector3 linearVector = Vector3Factory.makeVector3(2.0, 0, 0);
+            Vector3 angularVector = Vector3Factory.makeVector3(0, 0, 1.8);
             publishTwist(publisher, linearVector, angularVector);
-            loopCount += 1;
         }
 
     }
 
     private void publishTwist(Publisher<Twist> publisher, Vector3 linearVector, Vector3 angularVector) {
-        Twist twist = publisher.newMessage();
-        twist.setLinear(linearVector);
-        twist.setAngular(angularVector);
+        Twist twist = TwistFactory.makeTwist(angularVector, linearVector);
         publisher.publish(twist);
     }
 

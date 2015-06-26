@@ -1,4 +1,4 @@
-package com.rad.rosplayground.rosjava.msg;
+package com.rad.rosplayground.rosjava.msg.listeners;
 
 import org.ros.message.MessageListener;
 import org.ros.node.topic.Publisher;

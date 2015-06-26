@@ -1,8 +1,9 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.rosjava.msg.PublishingData;
+import com.rad.rosplayground.rosjava.msg.data.PublishingData;
+import com.rad.rosplayground.rosjava.utils.ROSUtils;
 
-import org.ros.concurrent.CancellableLoop;
+import org.apache.commons.lang.StringUtils;
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -26,18 +27,16 @@ public class DataPublisherNode extends AbstractNodeMain {
 
     @Override
     public GraphName getDefaultNodeName() {
-        return GraphName.of("DataPublisherNode_" + topicToPublishTo.getName());
+        String[] stringList = new String[]{
+                "DataPublisherNode",
+                topicToPublishTo.getName(),
+        };
+        return GraphName.of(StringUtils.join(stringList, "_"));
     }
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
-        publisher = connectedNode.newPublisher(GraphName.of(topicToPublishTo.getName()), topicToPublishTo.getMessageType());
-        CancellableLoop loop = new CancellableLoop() {
-            protected void loop() throws InterruptedException {
-                publisher.publish(dataToPublish.getDataMsg());
-                Thread.sleep(rateToPublishAt);
-            }
-        };
-        connectedNode.executeCancellableLoop(loop);
+        publisher = ROSUtils.addPublisher(connectedNode, topicToPublishTo);
+        ROSUtils.executeCancellableLoop(connectedNode, publisher, dataToPublish, rateToPublishAt);
     }
 }

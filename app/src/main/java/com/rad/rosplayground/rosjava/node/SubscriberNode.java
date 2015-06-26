@@ -2,7 +2,9 @@ package com.rad.rosplayground.rosjava.node;
 
 import com.rad.rosplayground.rosjava.msg.actors.Actor;
 import com.rad.rosplayground.rosjava.msg.listeners.MessageActor;
+import com.rad.rosplayground.rosjava.utils.ROSUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -20,12 +22,16 @@ public class SubscriberNode extends AbstractNodeMain{
 
     @Override
     public GraphName getDefaultNodeName() {
-        return GraphName.of("SubscriberNode_" + topicToSubscribeTo.getName());
+        String[] stringList = new String[]{
+                "SubscriberNode",
+                topicToSubscribeTo.getName(),
+        };
+        return GraphName.of(StringUtils.join(stringList, "_"));
     }
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
-        Subscriber<Object> subscriber = connectedNode.newSubscriber(topicToSubscribeTo.getName(), topicToSubscribeTo.getMessageType());
+        Subscriber<Object> subscriber = ROSUtils.addSubscriber(connectedNode, topicToSubscribeTo);
         addMessageActor(subscriber);
     }
 

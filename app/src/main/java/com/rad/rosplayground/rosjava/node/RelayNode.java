@@ -1,7 +1,9 @@
 package com.rad.rosplayground.rosjava.node;
 
-import com.rad.rosplayground.rosjava.msg.MessageRelay;
+import com.rad.rosplayground.rosjava.msg.listeners.MessageRelay;
+import com.rad.rosplayground.rosjava.utils.ROSUtils;
 
+import org.apache.commons.lang.StringUtils;
 import org.ros.master.client.TopicType;
 import org.ros.namespace.GraphName;
 import org.ros.node.AbstractNodeMain;
@@ -16,20 +18,30 @@ public class RelayNode extends AbstractNodeMain {
     private TopicType topicToSubscribeTo;
 
     public RelayNode(TopicType topicToPublishTo, TopicType topicToSubscribeTo){
-        //TODO check that these topics have the same type. Either here or restrict the options when creating a relay node
         this.topicToPublishTo = topicToPublishTo;
         this.topicToSubscribeTo = topicToSubscribeTo;
     }
 
     @Override
     public GraphName getDefaultNodeName() {
-        return GraphName.of("RelayNode_From_" + topicToSubscribeTo.getName() + "_To_" + topicToPublishTo.getName());
+        String[] stringList = new String[]{
+                "RelayNode",
+                "From",
+                topicToSubscribeTo.getName(),
+                "To",
+                topicToPublishTo.getName()
+        };
+        return GraphName.of(StringUtils.join(stringList, "_"));
     }
 
     @Override
     public void onStart(ConnectedNode connectedNode) {
-        final Publisher<Object> publisher = connectedNode.newPublisher(GraphName.of(topicToPublishTo.getName()), topicToPublishTo.getMessageType());
-        Subscriber<Object> subscriber = connectedNode.newSubscriber(topicToSubscribeTo.getName(), topicToSubscribeTo.getMessageType());
+        final Publisher<Object> publisher = ROSUtils.addPublisher(connectedNode, topicToPublishTo);
+        Subscriber<Object> subscriber = ROSUtils.addSubscriber(connectedNode, topicToSubscribeTo);
+        addMessageRelay(publisher, subscriber);
+    }
+
+    private void addMessageRelay(Publisher<Object> publisher, Subscriber<Object> subscriber) {
         subscriber.addMessageListener(new MessageRelay<>(publisher));
     }
 }

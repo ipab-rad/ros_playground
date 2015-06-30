@@ -25,6 +25,8 @@ public class SubscriberModuleView extends ModuleView {
     private ModuleListActivity parentActivity;
     private boolean isOnClick;
     private int MOVE_THRESHOLD = 50;
+    private int initialX;
+    private int initialY;
 
     public SubscriberModuleView(Context context, URI masterURI, TopicType topicToSubscribeTo, Actor actor, MasterStateClient masterStateClient) {
         super(context);
@@ -45,6 +47,8 @@ public class SubscriberModuleView extends ModuleView {
             case MotionEvent.ACTION_DOWN:
                 _xDelta = X - v.getX();
                 _yDelta = Y - v.getY();
+                initialX = X;
+                initialY = Y;
                 isOnClick = true;
                 break;
             case MotionEvent.ACTION_UP:
@@ -56,7 +60,7 @@ public class SubscriberModuleView extends ModuleView {
             case MotionEvent.ACTION_POINTER_UP:
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (isOnClick && (Math.abs(_xDelta - X) > MOVE_THRESHOLD || Math.abs(_yDelta - Y) > MOVE_THRESHOLD)) {
+                if (isOnClick && (Math.abs(initialX - X) > MOVE_THRESHOLD || Math.abs(initialY - Y) > MOVE_THRESHOLD)) {
                     isOnClick = false;
                 }
                 v.setX(X - _xDelta);
